@@ -1,5 +1,8 @@
 <?php
 
 echo "LA PLATEFORME";
-
+$NOM_CANDIDAT = "John Doe";
+echo $NOM_CANDIDAT;
+$PRENOM_CANDIDAT = "JANE";
+echo $PRENOM_CANDIDAT;
 ?>
