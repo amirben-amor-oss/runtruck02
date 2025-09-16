@@ -21,6 +21,8 @@ echo $val . "<br>";
 echo $myBool . $str4 . "<br>"; 
 
 
+
+
    $myBool = false;
    $str5 = "false";
 echo $myBool . $str5 . "<br>";
