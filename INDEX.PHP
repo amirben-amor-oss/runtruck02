@@ -1,8 +1,27 @@
 <?php
+   $str = "La Plateforme";
+echo $str . "<br>";
 
-echo "LA PLATEFORME";
-$NOM_CANDIDAT = "John Doe";
-echo $NOM_CANDIDAT;
-$PRENOM_CANDIDAT = "JANE";
-echo $PRENOM_CANDIDAT;
+
+   $str2 = "Vive";
+   $str3 = "!";
+echo $str2 . " " . $str . " " . $str3 . "<br>";
+
+
+   $val = 6;
+echo $val . "<br>";
+
+
+   $val += 4;
+echo $val . "<br>";
+
+
+   $myBool = true;
+   $str4 = "true";
+echo $myBool . $str4 . "<br>"; 
+
+
+   $myBool = false;
+   $str5 = "false";
+echo $myBool . $str5 . "<br>";
 ?>
