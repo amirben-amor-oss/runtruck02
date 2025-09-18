@@ -60,7 +60,7 @@
         tr:last-child td {
             border-bottom: none;
         }
-        .reverse-block {
+        .result-block {
             margin-top: 20px;
             padding: 12px;
             background: #eaf4ff;
@@ -73,6 +73,14 @@
             font-weight: bold;
             color: #2b85e4;
             margin-bottom: 6px;
+        }
+        .palindrome {
+            color: green;
+            font-weight: bold;
+        }
+        .not-palindrome {
+            color: red;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -87,6 +95,7 @@
     if (isset($_POST['str'])) {
         $str = $_POST['str'];
 
+        // Compter voyelles et consonnes
         $dic = [
             "voyelles" => 0,
             "consonnes" => 0
@@ -101,6 +110,7 @@
             }
         }
 
+        // Affichage du tableau
         echo "<table>";
         echo "<thead><tr><th>Voyelles</th><th>Consonnes</th></tr></thead>";
         echo "<tbody><tr>";
@@ -114,10 +124,20 @@
         for ($i = strlen($str)-1; $i >= 0; $i--) {
             $reverse .= $str[$i];
         }
-        echo "<div class='reverse-block'>";
+        echo "<div class='result-block'>";
         echo "<div class='reverse-title'>Chaîne à l'envers :</div>";
         echo "<span>" . htmlspecialchars($reverse) . "</span>";
         echo "</div>";
+
+        // Vérification palindrome
+        $cleaned = strtolower(preg_replace('/[^a-z0-9]/i', '', $str));
+        $reverseCleaned = strrev($cleaned);
+
+        if ($cleaned === $reverseCleaned && strlen($cleaned) > 0) {
+            echo "<div class='result-block palindrome'>La chaîne saisie est un palindrome !</div>";
+        } else {
+            echo "<div class='result-block not-palindrome'>La chaîne saisie n'est pas un palindrome.</div>";
+        }
     }
     ?>
 </body>

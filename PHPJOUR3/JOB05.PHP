@@ -65,7 +65,8 @@
 <body>
     <form method="post">
         <label for="str">Entrez une chaîne de caractères :</label>
-        <input type="text" name="str" id="str" required>
+        <input type="text" name="str" id="str" required
+            value="<?php if(isset($_POST['str'])) echo htmlspecialchars($_POST['str']); else echo "On n’est pas le meilleur quand on le croit mais quand on le sait"; ?>">
         <input type="submit" value="Compter">
     </form>
 
@@ -78,12 +79,24 @@
             "consonnes" => 0
         ];
 
+        $voyelles = "aeiouy";
+        $consonnes = "bcdfghjklmnpqrstvwxz";
+
         for ($i = 0; $i < strlen($str); $i++) {
             $char = strtolower($str[$i]);
-            if (preg_match('/[aeiouy]/', $char)) {
-                $dic["voyelles"]++;
-            } elseif (preg_match('/[bcdfghjklmnpqrstvwxz]/', $char)) {
-                $dic["consonnes"]++;
+            // Vérifie si c'est une voyelle
+            for ($j = 0; $j < strlen($voyelles); $j++) {
+                if ($char === $voyelles[$j]) {
+                    $dic["voyelles"]++;
+                    break; // Passe au caractère suivant
+                }
+            }
+            // Vérifie si c'est une consonne
+            for ($j = 0; $j < strlen($consonnes); $j++) {
+                if ($char === $consonnes[$j]) {
+                    $dic["consonnes"]++;
+                    break;
+                }
             }
         }
 
