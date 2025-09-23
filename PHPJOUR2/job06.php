@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<<<<<<< HEAD
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -37,5 +38,38 @@ for ($j = 0; $j < $largeur; $j++) {
 echo "\n";
 ?>
     </pre>
+=======
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Affichage d'un rectangle net</title>
+    <style>
+        body { font-family: monospace; }
+    </style>
+</head>
+<body>
+<?php
+$largeur = 20;
+$hauteur = 10;
+
+for ($h = 0; $h < $hauteur; $h++) {
+    for ($l = 0; $l < $largeur; $l++) {
+        // Bord haut ou bas
+        if ($h == 0 || $h == $hauteur - 1) {
+            echo "-";
+        }
+        // Bord gauche ou droit
+        else if ($l == 0 || $l == $largeur - 1) {
+            echo "-";
+        }
+        // Intérieur
+        else {
+            echo " ";
+        }
+    }
+    echo "<br />";
+}
+?>
+>>>>>>> d5b8d42c641733818fd6480beb7dfabc9abba5e1
 </body>
 </html>
