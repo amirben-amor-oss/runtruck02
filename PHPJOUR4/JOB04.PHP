@@ -1,12 +1,12 @@
 <?php
-// Vérifie s'il y a des arguments GET
-$hasArguments = isset($_GET) && count($_GET) > 0;
+// Vérifie s'il y a des arguments POST
+$hasArguments = isset($_POST) && count($_POST) > 0;
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Arguments GET</title>
+    <title>Arguments POST</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -25,7 +25,7 @@ $hasArguments = isset($_GET) && count($_GET) > 0;
             text-align: left;
         }
         th {
-            background-color: #4CAF50;
+            background-color: #2196F3;
             color: white;
         }
         tr:nth-child(even) {
@@ -49,7 +49,7 @@ $hasArguments = isset($_GET) && count($_GET) > 0;
         }
         input[type="submit"] {
             padding: 10px 15px;
-            background-color: #4CAF50;
+            background-color: #2196F3;
             color: white;
             border: none;
             border-radius: 4px;
@@ -65,11 +65,11 @@ $hasArguments = isset($_GET) && count($_GET) > 0;
     </style>
 </head>
 <body>
-    <h1>Arguments GET</h1>
+    <h1>Arguments POST</h1>
     
     <div class="form-container">
         <h2>Formulaire de test</h2>
-        <form method="GET" action="">
+        <form method="POST" action="">
             <input type="text" name="nom" placeholder="Nom">
             <br>
             <input type="text" name="email" placeholder="Email">
@@ -91,7 +91,7 @@ $hasArguments = isset($_GET) && count($_GET) > 0;
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($_GET as $key => $value): ?>
+                <?php foreach ($_POST as $key => $value): ?>
                     <tr>
                         <td><?php echo htmlspecialchars($key); ?></td>
                         <td><?php echo htmlspecialchars($value); ?></td>
@@ -101,7 +101,7 @@ $hasArguments = isset($_GET) && count($_GET) > 0;
         </table>
     <?php else: ?>
         <div class="no-arguments">
-            Aucun argument GET n'a été envoyé.
+            Aucun argument POST n'a été envoyé.
         </div>
     <?php endif; ?>
 </body>

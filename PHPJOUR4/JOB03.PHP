@@ -1,17 +1,20 @@
 <?php
-// Compte le nombre
+// Compte le nombre d'arguments POST
 $nombreArguments = 0;
 
-// Parcourt le tableau 
-foreach ($_GET as $key => $value) {
+// Parcourt le tableau $_POST pour compter les éléments
+foreach ($_POST as $key => $value) {
     $nombreArguments++;
 }
+
+// Affiche le nombre d'arguments POST
+echo "Le nombre d'argument POST envoyé est : " . $nombreArguments;
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Compteur d'arguments GET</title>
+    <title>Compteur d'arguments POST</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -42,7 +45,7 @@ foreach ($_GET as $key => $value) {
         }
         input[type="submit"] {
             padding: 10px 20px;
-            background-color: #4CAF50;
+            background-color: #2196F3;
             color: white;
             border: none;
             border-radius: 4px;
@@ -50,7 +53,7 @@ foreach ($_GET as $key => $value) {
             margin-top: 10px;
         }
         input[type="submit"]:hover {
-            background-color: #45a049;
+            background-color: #1976D2;
         }
         .result {
             font-size: 18px;
@@ -59,17 +62,17 @@ foreach ($_GET as $key => $value) {
             margin: 20px 0;
         }
         .highlight {
-            color: #4CAF50;
+            color: #2196F3;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Compteur d'arguments GET</h1>
+        <h1>Compteur d'arguments POST</h1>
         
         <div class="form-container">
             <h2>Formulaire de test</h2>
-            <form method="GET" action="">
+            <form method="POST" action="">
                 <input type="text" name="nom" placeholder="Nom">
                 <br>
                 <input type="text" name="email" placeholder="Email">
@@ -81,7 +84,7 @@ foreach ($_GET as $key => $value) {
         </div>
         
         <div class="result">
-            Le nombre d'argument GET envoyé est : <span class="highlight"><?php echo $nombreArguments; ?></span>
+            Le nombre d'argument POST envoyé est : <span class="highlight"><?php echo $nombreArguments; ?></span>
         </div>
     </div>
 </body>
