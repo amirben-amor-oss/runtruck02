@@ -1,108 +1,64 @@
 <?php
-// Vérifie s'il y a des arguments GET
-$hasArguments = isset($_GET) && count($_GET) > 0;
+function bonjour($jour) {
+    if ($jour) {
+        echo "Bonjour";
+    } else {
+        echo "Bonsoir";
+    }
+}
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Arguments GET</title>
+    <title>Bonjour ou Bonsoir</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
+            text-align: center;
+            margin-top: 100px;
+            background-color: #f0f0f0;
         }
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            margin: 20px 0;
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: inline-block;
         }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 12px;
-            text-align: left;
-        }
-        th {
-            background-color: #4CAF50;
-            color: white;
-        }
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-        tr:hover {
-            background-color: #ddd;
-        }
-        .form-container {
-            background-color: #f9f9f9;
-            padding: 20px;
-            border-radius: 5px;
-            margin: 20px 0;
-        }
-        input[type="text"] {
-            padding: 8px;
-            margin: 5px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            width: 200px;
-        }
-        input[type="submit"] {
-            padding: 10px 15px;
+        .button {
+            padding: 10px 20px;
+            margin: 10px;
             background-color: #4CAF50;
             color: white;
             border: none;
             border-radius: 4px;
             cursor: pointer;
-            margin-top: 10px;
         }
-        .no-arguments {
-            color: #666;
-            font-style: italic;
-            text-align: center;
-            padding: 20px;
+        .button:hover {
+            background-color: #45a049;
         }
     </style>
 </head>
 <body>
-    <h1>Arguments GET</h1>
-    
-    <div class="form-container">
-        <h2>Formulaire de test</h2>
-        <form method="GET" action="">
-            <input type="text" name="nom" placeholder="Nom">
-            <br>
-            <input type="text" name="email" placeholder="Email">
-            <br>
-            <input type="text" name="ville" placeholder="Ville">
-            <br>
-            <input type="text" name="age" placeholder="Age">
-            <br>
-            <input type="submit" value="Envoyer">
-        </form>
+    <div class="container">
+        <h1>Exemple de fonction bonjour()</h1>
+        <p>Appel avec true :</p>
+        <?php bonjour(true); ?>
+        <br><br>
+        <p>Appel avec false :</p>
+        <?php bonjour(false); ?>
+        <br><br>
+        <p>Test avec boutons :</p>
+        <button class="button" onclick="window.location.href='?jour=true'">Bonjour</button>
+        <button class="button" onclick="window.location.href='?jour=false'">Bonsoir</button>
+        <?php
+        if (isset($_GET['jour'])) {
+            echo "<br><br><p>Resultat : ";
+            bonjour($_GET['jour'] === 'true');
+            echo "</p>";
+        }
+        ?>
     </div>
-    
-    <?php if ($hasArguments): ?>
-        <table>
-            <thead>
-                <tr>
-                    <th>Argument</th>
-                    <th>Valeur</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($_GET as $key => $value): ?>
-                    <tr>
-                        <td><?php echo htmlspecialchars($key); ?></td>
-                        <td><?php echo htmlspecialchars($value); ?></td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    <?php else: ?>
-        <div class="no-arguments">
-            Aucun argument GET n'a été envoyé.
-        </div>
-    <?php endif; ?>
 </body>
 </html>
