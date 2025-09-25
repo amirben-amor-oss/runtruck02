@@ -13,7 +13,7 @@ if (isset($_POST['start'])) {
 // Réinitialiser toute la session = retour au formulaire
 if (isset($_POST['reset'])) {
     session_destroy();
-    header("Location: index.php");
+    header("Location: JOB05.php");
     exit();
 }
 ?>
