@@ -23,14 +23,16 @@ if (isset($_POST['joueur1']) && isset($_POST['joueur2']) && !empty($_POST['joueu
 }
 
 // Vérification si une case a été cliquée
-if (isset($_POST['ligne']) && isset($_POST['colonne']) && !$_SESSION['game_over'] && $_SESSION['joueur1'] != '' && $_SESSION['joueur2'] != '') {
+if (
+    isset($_POST['ligne']) && isset($_POST['colonne']) &&
+    $_POST['ligne'] !== '' && $_POST['colonne'] !== '' &&
+    !$_SESSION['game_over'] && $_SESSION['joueur1'] != '' && $_SESSION['joueur2'] != ''
+) {
     $ligne = $_POST['ligne'];
     $colonne = $_POST['colonne'];
-    
     // Vérification que la case est vide
     if ($_SESSION['grille'][$ligne][$colonne] === '-') {
         $_SESSION['grille'][$ligne][$colonne] = $_SESSION['tour'];
-        
         // Vérification de victoire
         if (verifierVictoire($_SESSION['grille'], $_SESSION['tour'])) {
             $_SESSION['game_over'] = true;
@@ -57,14 +59,12 @@ function verifierVictoire($grille, $joueur) {
             return true;
         }
     }
-    
     // Vérification des colonnes
     for ($i = 0; $i < 3; $i++) {
         if ($grille[0][$i] === $joueur && $grille[1][$i] === $joueur && $grille[2][$i] === $joueur) {
             return true;
         }
     }
-    
     // Vérification des diagonales
     if ($grille[0][0] === $joueur && $grille[1][1] === $joueur && $grille[2][2] === $joueur) {
         return true;
@@ -72,7 +72,6 @@ function verifierVictoire($grille, $joueur) {
     if ($grille[0][2] === $joueur && $grille[1][1] === $joueur && $grille[2][0] === $joueur) {
         return true;
     }
-    
     return false;
 }
 
