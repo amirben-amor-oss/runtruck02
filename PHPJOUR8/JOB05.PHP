@@ -184,7 +184,7 @@ function verifierEgalite($grille) {
             </div>
         <?php else: ?>
             <div class="player-info">
-                <p>Joueur actuel: <?php echo ($_SESSION['current_player'] == 1) ? $_SESSION['joueur1'] : $_SESSION['joueur2']; ?></p>
+                <p> C'est le tour de : <?php echo ($_SESSION['current_player'] == 1) ? $_SESSION['joueur1'] : $_SESSION['joueur2']; ?></p>
                 <p>Tour: <?php echo $_SESSION['tour']; ?></p>
             </div>
             
