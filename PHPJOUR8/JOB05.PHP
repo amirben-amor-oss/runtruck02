@@ -1,230 +1,148 @@
 <?php
 session_start();
 
-// Initialisation des joueurs
-if (!isset($_SESSION['joueur1']) || !isset($_SESSION['joueur2'])) {
-    $_SESSION['joueur1'] = '';
-    $_SESSION['joueur2'] = '';
-}
-
-// Initialisation de la partie
-if (!isset($_SESSION['grille']) || isset($_POST['reset'])) {
-    $_SESSION['grille'] = array_fill(0, 3, array_fill(0, 3, '-'));
-    $_SESSION['tour'] = 'X';
-    $_SESSION['game_over'] = false;
+// Initialisation du jeu
+if (isset($_POST['start'])) {
+    $_SESSION['playerX'] = $_POST['playerX'];
+    $_SESSION['playerO'] = $_POST['playerO'];
+    $_SESSION['board'] = array_fill(0, 9, '');
+    $_SESSION['turn'] = 'X';
     $_SESSION['winner'] = '';
-    $_SESSION['current_player'] = 1;
 }
 
-// Traitement du formulaire de configuration
-if (isset($_POST['joueur1']) && isset($_POST['joueur2']) && !empty($_POST['joueur1']) && !empty($_POST['joueur2'])) {
-    $_SESSION['joueur1'] = $_POST['joueur1'];
-    $_SESSION['joueur2'] = $_POST['joueur2'];
-}
-
-// Vérification si une case a été cliquée
-if (
-    isset($_POST['ligne']) && isset($_POST['colonne']) &&
-    $_POST['ligne'] !== '' && $_POST['colonne'] !== '' &&
-    !$_SESSION['game_over'] && $_SESSION['joueur1'] != '' && $_SESSION['joueur2'] != ''
-) {
-    $ligne = $_POST['ligne'];
-    $colonne = $_POST['colonne'];
-    // Vérification que la case est vide
-    if ($_SESSION['grille'][$ligne][$colonne] === '-') {
-        $_SESSION['grille'][$ligne][$colonne] = $_SESSION['tour'];
-        // Vérification de victoire
-        if (verifierVictoire($_SESSION['grille'], $_SESSION['tour'])) {
-            $_SESSION['game_over'] = true;
-            $_SESSION['winner'] = $_SESSION['tour'];
-        } 
-        // Vérification d'égalité
-        elseif (verifierEgalite($_SESSION['grille'])) {
-            $_SESSION['game_over'] = true;
-            $_SESSION['winner'] = 'match nul';
-        } 
-        // Changement de tour
-        else {
-            $_SESSION['tour'] = ($_SESSION['tour'] === 'X') ? 'O' : 'X';
-            $_SESSION['current_player'] = ($_SESSION['current_player'] === 1) ? 2 : 1;
-        }
-    }
-}
-
-// Fonction pour vérifier la victoire
-function verifierVictoire($grille, $joueur) {
-    // Vérification des lignes
-    for ($i = 0; $i < 3; $i++) {
-        if ($grille[$i][0] === $joueur && $grille[$i][1] === $joueur && $grille[$i][2] === $joueur) {
-            return true;
-        }
-    }
-    // Vérification des colonnes
-    for ($i = 0; $i < 3; $i++) {
-        if ($grille[0][$i] === $joueur && $grille[1][$i] === $joueur && $grille[2][$i] === $joueur) {
-            return true;
-        }
-    }
-    // Vérification des diagonales
-    if ($grille[0][0] === $joueur && $grille[1][1] === $joueur && $grille[2][2] === $joueur) {
-        return true;
-    }
-    if ($grille[0][2] === $joueur && $grille[1][1] === $joueur && $grille[2][0] === $joueur) {
-        return true;
-    }
-    return false;
-}
-
-// Fonction pour vérifier l'égalité
-function verifierEgalite($grille) {
-    for ($i = 0; $i < 3; $i++) {
-        for ($j = 0; $j < 3; $j++) {
-            if ($grille[$i][$j] === '-') {
-                return false;
-            }
-        }
-    }
-    return true;
+// Réinitialisation
+if (isset($_POST['reset'])) {
+    session_destroy();
+    header("Location: index.php");
+    exit();
 }
 ?>
-
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
+    <meta charset="UTF-8">
     <title>Jeu du Morpion</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            margin-top: 50px;
-            background-color: #f5f5f5;
+            background: #f4f4f4;
         }
-        .container {
-            background-color: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            display: inline-block;
-        }
-        table {
-            border-collapse: collapse;
-            margin: 20px auto;
-        }
-        td {
-            width: 80px;
-            height: 80px;
-            border: 2px solid #333;
-            text-align: center;
-            vertical-align: middle;
-            font-size: 36px;
-            font-weight: bold;
-        }
-        .cell {
-            cursor: pointer;
-            background-color: #e9e9e9;
-        }
-        .cell:hover {
-            background-color: #ddd;
-        }
-        .message {
-            font-size: 24px;
-            font-weight: bold;
-            margin: 20px 0;
+        h1 {
             color: #333;
         }
-        .win-message {
-            color: #4CAF50;
+        form {
+            margin: 20px;
         }
-        .draw-message {
-            color: #ff9800;
-        }
-        input[type="submit"] {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            font-size: 16px;
-            cursor: pointer;
-            border-radius: 5px;
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            gap: 5px;
+            justify-content: center;
             margin-top: 20px;
         }
-        input[type="submit"]:hover {
-            background-color: #45a049;
+        .cell {
+            width: 100px;
+            height: 100px;
+            font-size: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: white;
+            border: 2px solid #ccc;
+            cursor: pointer;
         }
-        .player-info {
-            margin: 15px 0;
-            font-size: 18px;
+        .info {
+            margin-top: 20px;
+            font-size: 20px;
         }
-        .form-container {
-            margin: 20px 0;
-        }
-        input[type="text"] {
-            padding: 8px;
-            font-size: 16px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            margin: 5px;
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Jeu du Morpion</h1>
-        
-        <?php if ($_SESSION['joueur1'] == '' || $_SESSION['joueur2'] == ''): ?>
-            <div class="form-container">
-                <h2>Configuration des joueurs</h2>
-                <form method="post">
-                    <input type="text" name="joueur1" placeholder="Joueur 1 (X)" required>
-                    <input type="text" name="joueur2" placeholder="Joueur 2 (O)" required>
-                    <br><br>
-                    <input type="submit" value="Démarrer la partie">
-                </form>
-            </div>
-        <?php else: ?>
-            <div class="player-info">
-                <p> C'est le tour de : <?php echo ($_SESSION['current_player'] == 1) ? $_SESSION['joueur1'] : $_SESSION['joueur2']; ?></p>
-                <p>Tour: <?php echo $_SESSION['tour']; ?></p>
-            </div>
-            
-            <?php if ($_SESSION['game_over']): ?>
-                <div class="message <?php echo ($_SESSION['winner'] === 'match nul') ? 'draw-message' : 'win-message'; ?>">
-                    <?php 
-                    if ($_SESSION['winner'] === 'match nul') {
-                        echo "Match nul !";
-                    } else {
-                        $winner_name = ($_SESSION['winner'] === 'X') ? $_SESSION['joueur1'] : $_SESSION['joueur2'];
-                        echo $winner_name . " a gagné !";
-                    }
-                    ?>
-                </div>
-            <?php endif; ?>
-            
-            <form method="post">
-                <table>
-                    <?php for ($i = 0; $i < 3; $i++): ?>
-                        <tr>
-                            <?php for ($j = 0; $j < 3; $j++): ?>
-                                <td>
-                                    <?php if ($_SESSION['grille'][$i][$j] === '-'): ?>
-                                        <input type="submit" name="case" value="-" class="cell" 
-                                               onclick="this.form.ligne.value='<?php echo $i; ?>'; this.form.colonne.value='<?php echo $j; ?>'; this.form.submit();">
-                                        <input type="hidden" name="ligne" value="">
-                                        <input type="hidden" name="colonne" value="">
-                                    <?php else: ?>
-                                        <?php echo $_SESSION['grille'][$i][$j]; ?>
-                                    <?php endif; ?>
-                                </td>
-                            <?php endfor; ?>
-                        </tr>
-                    <?php endfor; ?>
-                </table>
-            </form>
-            
-            <form method="post">
-                <input type="submit" name="reset" value="Réinitialiser la partie">
-            </form>
-        <?php endif; ?>
+
+<?php if (!isset($_SESSION['playerX']) || !isset($_SESSION['playerO'])): ?>
+    <h1>Jeu du Morpion</h1>
+    <form method="post">
+        <input type="text" name="playerX" placeholder="Nom du joueur X" required>
+        <input type="text" name="playerO" placeholder="Nom du joueur O" required>
+        <button type="submit" name="start">Commencer</button>
+    </form>
+
+<?php else: ?>
+    <h1>Morpion</h1>
+    <div class="info" id="gameInfo">
+        C'est le tour de <strong><?= $_SESSION['turn'] === 'X' ? $_SESSION['playerX'] : $_SESSION['playerO'] ?></strong> (<?= $_SESSION['turn'] ?>)
     </div>
+
+    <div class="board" id="board">
+        <?php
+        foreach ($_SESSION['board'] as $index => $value) {
+            echo "<div class='cell' data-index='$index'>$value</div>";
+        }
+        ?>
+    </div>
+
+    <form method="post">
+        <button type="submit" name="reset">Réinitialiser la partie</button>
+    </form>
+
+    <script>
+        const board = document.getElementById("board");
+        const cells = document.querySelectorAll(".cell");
+        let turn = "<?= $_SESSION['turn'] ?>";
+        let playerX = "<?= $_SESSION['playerX'] ?>";
+        let playerO = "<?= $_SESSION['playerO'] ?>";
+        let gameOver = false;
+
+        const combos = [
+            [0,1,2], [3,4,5], [6,7,8], // lignes
+            [0,3,6], [1,4,7], [2,5,8], // colonnes
+            [0,4,8], [2,4,6]           // diagonales
+        ];
+
+        function checkWinner() {
+            for (let combo of combos) {
+                const [a, b, c] = combo;
+                if (cells[a].textContent && cells[a].textContent === cells[b].textContent && cells[a].textContent === cells[c].textContent) {
+                    return cells[a].textContent;
+                }
+            }
+            return null;
+        }
+
+        function isDraw() {
+            return [...cells].every(cell => cell.textContent);
+        }
+
+        board.addEventListener("click", function(e) {
+            if (gameOver || !e.target.classList.contains("cell")) return;
+            if (e.target.textContent !== "") return;
+
+            e.target.textContent = turn;
+
+            let winner = checkWinner();
+            if (winner) {
+                document.getElementById("gameInfo").innerHTML = `🎉 Bravo <strong>${winner === "X" ? playerX : playerO}</strong> ! Vous avez gagné.`;
+                gameOver = true;
+                return;
+            }
+
+            if (isDraw()) {
+                document.getElementById("gameInfo").textContent = "Match nul !";
+                gameOver = true;
+                return;
+            }
+
+            turn = turn === "X" ? "O" : "X";
+            document.getElementById("gameInfo").innerHTML = `C'est le tour de <strong>${turn === "X" ? playerX : playerO}</strong> (${turn})`;
+        });
+    </script>
+
+<?php endif; ?>
+
 </body>
 </html>
