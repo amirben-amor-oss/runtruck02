@@ -14,7 +14,7 @@ if ($connexion->connect_error) {
 }
 
 // Requête SQL pour récupérer le prénom, le nom et la date de naissance des étudiants féminins
-$sql = "SELECT prenom, nom, date_naissance FROM etudiants WHERE sexe = 'Femme'";
+$sql = "SELECT prenom, nom, naissance FROM etudiants WHERE sexe = 'Femme'";
 $resultat = $connexion->query($sql);
 
 // Affichage dans un tableau HTML avec CSS

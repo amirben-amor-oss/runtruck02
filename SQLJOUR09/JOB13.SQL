@@ -1,0 +1,2 @@
+USE jour9
+SELECT AVG(CAPACITE) FOROM salles;
