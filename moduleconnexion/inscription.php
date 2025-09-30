@@ -2,8 +2,8 @@
 include 'config.php';
 
 function motDePasseValide($password) {
-    // Min 15 caractères, au moins 1 majuscule, 1 minuscule, 1 chiffre, 1 caractère spécial
-    return preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{15,}$/', $password);
+    // Min 8 caractères, au moins 1 majuscule, 1 minuscule, 1 chiffre
+    return preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/', $password);
 }
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
@@ -27,12 +27,27 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         if ($stmt->rowCount() > 0) {
             $error = "Ce login est déjà utilisé.";
         } else {
-            // Insérer l'utilisateur
-            $hashed = password_hash($password, PASSWORD_DEFAULT);
-            $stmt = $pdo->prepare("INSERT INTO utilisateurs (login, prenom, nom, password) VALUES (?, ?, ?, ?)");
-            $stmt->execute([$login, $prenom, $nom, $hashed]);
-            header("Location: connexion.php");
-            exit();
+            try {
+                // Insérer l'utilisateur
+                $hashed = password_hash($password, PASSWORD_DEFAULT);
+                $stmt = $pdo->prepare("INSERT INTO utilisateurs (login, prenom, nom, password) VALUES (?, ?, ?, ?)");
+                $result = $stmt->execute([$login, $prenom, $nom, $hashed]);
+                
+                if ($result) {
+                    $success = "Inscription réussie ! Redirection vers la page de connexion...";
+                    // Petite pause pour afficher le message
+                    echo "<script>
+                        alert('Inscription réussie !');
+                        setTimeout(function() {
+                            window.location.href = 'connexion.php';
+                        }, 1000);
+                    </script>";
+                } else {
+                    $error = "Erreur lors de l'insertion en base de données.";
+                }
+            } catch (PDOException $e) {
+                $error = "Erreur de base de données : " . $e->getMessage();
+            }
         }
     }
 }
@@ -50,6 +65,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     <?php if (isset($error)) : ?>
         <p class="error" style="color: red;"><?= htmlspecialchars($error) ?></p>
+    <?php endif; ?>
+
+    <?php if (isset($success)) : ?>
+        <p class="success" style="color: green; background-color: #d4edda; border: 1px solid #c3e6cb; padding: 10px; border-radius: 4px;"><?= htmlspecialchars($success) ?></p>
     <?php endif; ?>
 
     <form method="post" action="inscription.php">
